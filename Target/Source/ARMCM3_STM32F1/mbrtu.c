@@ -33,6 +33,7 @@
 #if (BOOT_COM_MBRTU_ENABLE > 0)
 #include "stm32f1xx.h"                           /* STM32 CPU and HAL header           */
 #include "stm32f1xx_ll_usart.h"                  /* STM32 LL USART header              */
+#include "device_config.h"                       /* Flash-based slave ID (AxaBio)      */
 
 
 /****************************************************************************************
@@ -61,6 +62,12 @@
  */
 static blt_int16u mbRtuT3_5Ticks;
 
+/** \brief Cached Modbus RTU slave ID, read from flash config page at init.
+ *         Falls back to BOOT_COM_MBRTU_NODE_ID if config page is invalid.
+ *         (AxaBio patch — allows bootloader to match application slave ID)
+ */
+static blt_int8u mbRtuNodeId;
+
 
 /****************************************************************************************
 * Function prototypes
@@ -82,6 +89,10 @@ void MbRtuInit(void)
   blt_int16u deltaTimeTicks;
   blt_int16u currentTimeTicks;
   blt_int8u  rxDummy;
+
+  /* Read slave ID from flash config page (AxaBio patch).
+   * Falls back to BOOT_COM_MBRTU_NODE_ID if page is unprogrammed. */
+  mbRtuNodeId = device_config_get_slave_id();
 
   LL_USART_InitTypeDef USART_InitStruct = {0};
 
@@ -197,7 +208,7 @@ void MbRtuTransmitPacket(blt_int8u *data, blt_int8u len)
   ASSERT_RT(len <= BOOT_COM_MBRTU_TX_MAX_DATA);
 
   /* construct the Modbus RTU packet. start by adding the slave address. */
-  txPacket[0] = BOOT_COM_MBRTU_NODE_ID;
+  txPacket[0] = mbRtuNodeId;
   /* add the user-defined function code for embedding XCP packets. */
   txPacket[1] = BOOT_COM_MBRTU_FCT_CODE_USER_XCP;
   /* add the XCP packet length. */
@@ -320,7 +331,7 @@ blt_bool MbRtuReceivePacket(blt_int8u *data, blt_int8u *len)
           /* we are only interested in Modbus RTU packets that are addressed to us and
            * have an XCP packet embedded.
            */
-          if ( (rxPacket[0] == BOOT_COM_MBRTU_NODE_ID) &&
+          if ( (rxPacket[0] == mbRtuNodeId) &&
                (rxPacket[1] == BOOT_COM_MBRTU_FCT_CODE_USER_XCP) )
           {
             /* An XCP packet embedded in a Modbus RTU packet has an extra XCP packet
