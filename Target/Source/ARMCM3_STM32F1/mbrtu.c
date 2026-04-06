@@ -51,6 +51,12 @@
 #elif (BOOT_COM_MBRTU_CHANNEL_INDEX == 2)
 /** \brief Set UART base address to USART3. */
 #define USART_CHANNEL   USART3
+#elif (BOOT_COM_MBRTU_CHANNEL_INDEX == 3)
+/** \brief Set UART base address to UART4. */
+#define USART_CHANNEL   UART4
+#elif (BOOT_COM_MBRTU_CHANNEL_INDEX == 4)
+/** \brief Set UART base address to UART5. */
+#define USART_CHANNEL   UART5
 #endif
 
 
@@ -101,7 +107,9 @@ void MbRtuInit(void)
    */
   ASSERT_CT((BOOT_COM_MBRTU_CHANNEL_INDEX == 0) ||
             (BOOT_COM_MBRTU_CHANNEL_INDEX == 1) ||
-            (BOOT_COM_MBRTU_CHANNEL_INDEX == 2));
+            (BOOT_COM_MBRTU_CHANNEL_INDEX == 2) ||
+            (BOOT_COM_MBRTU_CHANNEL_INDEX == 3) ||
+            (BOOT_COM_MBRTU_CHANNEL_INDEX == 4));
 
   /* calculate the 3.5 character delay time in free running counter ticks. note that
    * the free running counter runs at 100 kHz, so one tick is 10 us. For baudrates >
