@@ -20,10 +20,18 @@ extern "C" {
 #include <stdint.h>
 
 /* -----------------------------------------------------------------------
- * Flash page address — STM32F103RC (256KB flash, 2KB pages)
+ * Flash page address — last page of flash, varies per MCU.
+ * Override at build time with -DDEVICE_CONFIG_FLASH_ADDR=0x...
+ *
+ *   F103C8 (64KB,  1KB pages): 0x0800FC00
+ *   F103RC (256KB, 2KB pages): 0x0803F800
  * ----------------------------------------------------------------------- */
-#define DEVICE_CONFIG_FLASH_ADDR      0x0803F800U
-#define DEVICE_CONFIG_PAGE_SIZE       0x800U        /* 2KB */
+#ifndef DEVICE_CONFIG_FLASH_ADDR
+#define DEVICE_CONFIG_FLASH_ADDR      0x0803F800U   /* F103RC default */
+#endif
+#ifndef DEVICE_CONFIG_PAGE_SIZE
+#define DEVICE_CONFIG_PAGE_SIZE       0x800U         /* 2KB default */
+#endif
 
 /* Magic word — must match for config to be considered valid */
 #define DEVICE_CONFIG_MAGIC           0xA5C0CF16U
