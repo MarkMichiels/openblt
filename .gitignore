@@ -1,0 +1,5 @@
+# Build artifacts
+Host/BootCommander
+Host/libopenblt.so
+Host/*.o
+Host/*.d
