@@ -43,21 +43,23 @@
 #define MBRTU_BYTE_TX_TIMEOUT_MS          (10u)
 /* map the configured UART channel index to the STM32's USART peripheral */
 #if (BOOT_COM_MBRTU_CHANNEL_INDEX == 0)
-/** \brief Set UART base address to USART1. */
-#define USART_CHANNEL   USART1
+#define USART_CHANNEL_DEFAULT   USART1
 #elif (BOOT_COM_MBRTU_CHANNEL_INDEX == 1)
-/** \brief Set UART base address to USART2. */
-#define USART_CHANNEL   USART2
+#define USART_CHANNEL_DEFAULT   USART2
 #elif (BOOT_COM_MBRTU_CHANNEL_INDEX == 2)
-/** \brief Set UART base address to USART3. */
-#define USART_CHANNEL   USART3
+#define USART_CHANNEL_DEFAULT   USART3
 #elif (BOOT_COM_MBRTU_CHANNEL_INDEX == 3)
-/** \brief Set UART base address to UART4. */
-#define USART_CHANNEL   UART4
+#define USART_CHANNEL_DEFAULT   UART4
 #elif (BOOT_COM_MBRTU_CHANNEL_INDEX == 4)
-/** \brief Set UART base address to UART5. */
-#define USART_CHANNEL   UART5
+#define USART_CHANNEL_DEFAULT   UART5
 #endif
+
+/** \brief Runtime USART override — set by main.c before BootInit() for HW version support.
+ *         If NULL, uses the compile-time default (USART_CHANNEL_DEFAULT). */
+USART_TypeDef *mbRtuUsartOverride = (void *)0;
+
+/** \brief Resolve the active USART channel (runtime override or compile-time default). */
+#define USART_CHANNEL  (mbRtuUsartOverride ? mbRtuUsartOverride : USART_CHANNEL_DEFAULT)
 
 
 /****************************************************************************************
