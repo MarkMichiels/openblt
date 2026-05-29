@@ -187,7 +187,7 @@ static void XcpLoaderInit(void const * settings)
   xcpSettings.timeoutT3 = 2000;
   xcpSettings.timeoutT4 = 10000;
   xcpSettings.timeoutT5 = 1000;
-  xcpSettings.timeoutT6 = 50;
+  xcpSettings.timeoutT6 = 200;  /* Increased from 50ms to 200ms for bridge compatibility */
   xcpSettings.timeoutT7 = 2000;
   xcpSettings.connectMode = 0;
   xcpSettings.seedKeyFile = NULL;
@@ -263,7 +263,7 @@ static void XcpLoaderTerminate(void)
   xcpSettings.timeoutT3 = 2000;
   xcpSettings.timeoutT4 = 10000;
   xcpSettings.timeoutT5 = 1000;
-  xcpSettings.timeoutT6 = 50;
+  xcpSettings.timeoutT6 = 200;  /* Increased from 50ms to 200ms for bridge compatibility */
   xcpSettings.timeoutT7 = 2000;
   xcpSettings.connectMode = 0;
   xcpSettings.seedKeyFile = NULL;

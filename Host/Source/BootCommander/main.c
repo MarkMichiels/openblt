@@ -445,7 +445,7 @@ int main(int argc, char const * const argv[])
           GetLineTrailerByPercentage(0));
         (void)fflush(stdout);
         /* Perform write operation in chunks, so that a progress update can be shown. */
-        uint32_t const writeChunkSize = 256;
+        uint32_t const writeChunkSize = 64;
         uint32_t currentWriteCnt;
         uint32_t currentWriteBase;
         uint8_t const * currentWriteDataPtr;
@@ -1119,7 +1119,7 @@ static void * ExtractSessionSettingsFromCommandLine(int argc, char const * const
           xcpSettings->timeoutT3 = 2000;
           xcpSettings->timeoutT4 = 10000;
           xcpSettings->timeoutT5 = 1000;
-          xcpSettings->timeoutT6 = 50;
+          xcpSettings->timeoutT6 = 200;  /* Increased from 50ms to 200ms for bridge compatibility */
           xcpSettings->timeoutT7 = 2000;
           xcpSettings->seedKeyFile = NULL;
           xcpSettings->connectMode = 0;
