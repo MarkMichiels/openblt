@@ -120,6 +120,38 @@ code and feaser's code overlap. If there is no overlap, the merge is fully autom
 
 ---
 
+## Used as a submodule (bump the pointer after you push)
+
+This fork is consumed as a **git submodule** inside a parent repository. The parent does
+**not** track our branch — it pins one specific commit of `axabio-patches` (a "gitlink").
+
+That means pushing new commits here is **not enough**: the parent keeps pointing at the
+old commit until someone **bumps the submodule pointer** and commits that in the parent.
+Until then, the rest of the team still builds the old bootloader.
+
+So the full flow after changing the bootloader is **two commits in two repos**:
+
+```bash
+# 1. land your change in THIS fork
+git checkout axabio-patches
+# ... your commits ...
+git push origin axabio-patches
+
+# 2. bump the pointer in the PARENT repo so everyone picks it up
+cd <parent-repo>
+git -C path/to/openblt checkout axabio-patches
+git -C path/to/openblt pull
+git add path/to/openblt                 # stages the new submodule commit
+git commit -m "bump openblt submodule to axabio-patches tip"
+git push
+```
+
+If the parent shows `modified: path/to/openblt` after you switch this submodule to a
+branch tip, that is exactly this: the working submodule is ahead of the pinned commit.
+Either bump the pointer (step 2) or, if you are only building locally and don't want to
+move the pin yet, leave it — it is the submodule pointer, not a change to the parent's
+own files.
+
 ## Building and flashing
 
 Build and flash from the `axabio-patches` branch. See the upstream OpenBLT documentation
